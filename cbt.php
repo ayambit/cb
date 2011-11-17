@@ -5,8 +5,8 @@ function ls()
 {
 }
 
-#Распарсим переданный файл и получим нумерованный список
-#со следующими элементами:
+#Распарсим переданный файлu с двоеточиями в качестве разделителя
+#и получим нумерованный список со следующими элементами:
     #короткий аргумент
     #длинный аргумент
     #тип элемента управления
@@ -14,23 +14,38 @@ function ls()
     #описание аргумента
 function parse($file)
 {
-}
-
-#Просто прочитаем файл и выведем его н экран
-function jr()
-{
-    echo '<h1>File start</h1>';
+    echo '<h1>File parse start</h1>';
 
     $file='cmd/ls';
     #$text = file_get_contents ($file);
     #$text = readfile($file);
     $handle = fopen($file, r);
-    while ($row = fscanf($handle, "%s\t%s\t%s\n")) {
-        list ($arg, $field, $desk) = $row;
         echo '<table>';
-        echo "<tr><td>$arg</td><td>$field</td><td>$desk</td></tr>";
-        echo '</table>';
+    while ($row = fgets($handle)) {
+        list ($arg, $argl, $field, $desk) = explode(":",$row);
+        #выведем короткий аргумент
+        echo "<tr><td>$arg</td>";
+        #выведем длинный аргумент 
+        echo "<td>$argl</td>";
+        #выведем нужный элемент управления
+        echo "<td>";
+        switch (trim($field)) {
+            case "cbox":
+                echo "<input type='checkbox' name='cbox' 
+                       value='cbox' />";
+                break;
+            case "field":
+                echo "<input type='field' name='cbox' 
+                       value='cbox' />";
+                break;
+        }
+        echo "</td>";
+
+
+        #выведем описание
+        echo "<td>$desk</td></tr>";
     }
+        echo '</table>';
     fclose($handle);
     echo $text;
     
@@ -40,6 +55,31 @@ function mktbl($mk,$r1,$r2,$r3)
 {
         echo '<tr><td>$r1</td><td>$r2</td><td>$r3</td></tr>';
 }
-jr();
+
+function head()
+{
+    echo "
+    <html>
+    <head>
+        <style type='text/css'>
+            table,th,td
+            {
+                border:1px solid black;
+            }
+        </style>
+    </head>
+    <body>";
+}
+
+function foot()
+{
+    echo "
+    </body>
+    </html>";
+
+}
+head();
+parse(1);
+foot();
 
 ?>
